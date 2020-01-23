@@ -222,6 +222,7 @@ exports.security_question = function(req, res) {
 // POST /auth/tfa -- Verify token
 exports.tfa_verify = function(req, res) {
   debug('--> verify token');
+
   const flag = req.body.login_security_question;
   const user_token = req.body.token;
   const user_question = req.body.security_question;

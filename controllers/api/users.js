@@ -199,7 +199,6 @@ exports.create = function(req, res) {
   check_create_body_request(req.body)
     .then(function() {
       const user = models.user.build(req.body.user);
-
       user.image = 'default';
       user.enabled = true;
       user.id = uuid.v4();

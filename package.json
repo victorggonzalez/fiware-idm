@@ -90,6 +90,7 @@
     "eslint-plugin-snakecase": "0.0.1",
     "husky": "^1.1.0",
     "istanbul": "1.0.0-alpha.2",
+    "jsdom": "^15.1.1",
     "jshint": "~2.9.6",
     "lint-staged": "^7.3.0",
     "mocha": "^2.5.3",

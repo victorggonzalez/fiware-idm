@@ -605,9 +605,11 @@ function create_oauth_response(
         where: { user_id: identity.id, oauth_client_id: application_id },
       })
       .then(function(third_party_application) {
-        user_info.shared_attributes = third_party_application.shared_attributes;
-        if (user_info.shared_attributes.includes('username')) {
-          user_info.username = identity.username;
+        if (third_party_application) {
+          user_info.shared_attributes = third_party_application.shared_attributes;
+          if (user_info.shared_attributes.includes('username')) {
+            user_info.username = identity.username;
+          }
         }
       });
     debug(user_info.shared_attributes);

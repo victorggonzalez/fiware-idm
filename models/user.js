@@ -110,6 +110,13 @@ module.exports = function(sequelize, DataTypes) {
       },
       extra: {
         type: DataTypes.JSON,
+        get() {
+          if (typeof this.getDataValue('extra') == 'string') {
+            return JSON.parse(this.getDataValue('extra'))
+          } else {
+            return this.getDataValue('extra')
+          }
+        }
       },
       scope: {
         type: DataTypes.STRING(2000),
