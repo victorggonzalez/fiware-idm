@@ -30,7 +30,6 @@ let valid_token;
 let user_id;
 
 describe('WEB - 0 - 2 factor authentication: ', function() {
-
   // CREATE A VALID ADMIN TOKEN
   // eslint-disable-next-line no-undef
   before(function(done) {
@@ -51,14 +50,13 @@ describe('WEB - 0 - 2 factor authentication: ', function() {
   // CREATE A USER WITHOUT 2FA
   // eslint-disable-next-line no-undef
   before(function(done) {
-
     user_attributes = {
       user: {
-          username: "user_no_2fa",
-          email: "user_no_2fa@test.com",
-          password: "userno2fa"
-      }
-    }
+        username: 'user_no_2fa',
+        email: 'user_no_2fa@test.com',
+        password: 'userno2fa',
+      },
+    };
 
     const create_user = {
       url: config.host + '/v1/users',
@@ -78,22 +76,21 @@ describe('WEB - 0 - 2 factor authentication: ', function() {
   // CREATE A USER WITH 2FA ENABLE
   // eslint-disable-next-line no-undef
   before(function(done) {
-
     user_attributes = {
       user: {
-          username: "user2fa",
-          email: "user_2fa@test.com",
-          password: "user2fa",
-          extra: {
-            tfa: {
-                answer: "aaaa", 
-                secret: "KRRUW6TNM5DWEJS5GMXSKMZ6LA2TA5CBLMRXW23ZJVXSUXREFFIA", 
-                enabled: true, 
-                question: "aaaa"
-            }
-          }
-      }
-    }
+        username: 'user2fa',
+        email: 'user_2fa@test.com',
+        password: 'user2fa',
+        extra: {
+          tfa: {
+            answer: 'aaaa',
+            secret: 'KRRUW6TNM5DWEJS5GMXSKMZ6LA2TA5CBLMRXW23ZJVXSUXREFFIA',
+            enabled: true,
+            question: 'aaaa',
+          },
+        },
+      },
+    };
 
     const create_user = {
       url: config.host + '/v1/users',
@@ -106,8 +103,8 @@ describe('WEB - 0 - 2 factor authentication: ', function() {
     };
 
     request(create_user, function(error, response, body) {
-      let user_body = JSON.parse(body);
-      user_id = user_body.user.id
+      const user_body = JSON.parse(body);
+      user_id = user_body.user.id;
       done();
     });
   });
@@ -157,7 +154,6 @@ describe('WEB - 0 - 2 factor authentication: ', function() {
       });
     });
   });
-
 
   describe('2) When authenticate a user (with 2fa enable) through /auth/login', function() {
     let csrf_token;
@@ -222,7 +218,7 @@ describe('WEB - 0 - 2 factor authentication: ', function() {
         should.not.exist(error);
 
         const dom = new JSDOM(response.body);
-        code = dom.window.document.querySelector("input[name='token']")
+        code = dom.window.document.querySelector("input[name='token']");
         code.nodeName.should.equal('INPUT');
 
         done();
@@ -254,18 +250,17 @@ describe('WEB - 0 - 2 factor authentication: ', function() {
     });
 
     it('should return again an input to insert the code', function(done) {
-
       const send_token = {
         url: config.host + '/auth/tfa_verify',
         method: 'POST',
         json: {
           _csrf: csrf_token,
-          user_id: user_id,
+          user_id,
           token: '111111',
         },
         headers: {
           'Content-Type': 'application/json',
-          cookie: csrf_headers
+          cookie: csrf_headers,
         },
       };
 
@@ -274,7 +269,7 @@ describe('WEB - 0 - 2 factor authentication: ', function() {
         response.statusCode.should.equal(200);
 
         const dom = new JSDOM(response.body);
-        code = dom.window.document.querySelector("input[name='token']")
+        code = dom.window.document.querySelector("input[name='token']");
         code.nodeName.should.equal('INPUT');
 
         done();
@@ -311,14 +306,14 @@ describe('WEB - 0 - 2 factor authentication: ', function() {
         method: 'POST',
         json: {
           _csrf: csrf_token,
-          user_id: user_id,
+          user_id,
           login_security_question: true,
           security_question: 'bbbb',
           security_answer: 'bbbb',
         },
         headers: {
           'Content-Type': 'application/json',
-          cookie: csrf_headers
+          cookie: csrf_headers,
         },
       };
 
@@ -327,11 +322,15 @@ describe('WEB - 0 - 2 factor authentication: ', function() {
         response.statusCode.should.equal(200);
 
         const dom = new JSDOM(response.body);
-        let question = dom.window.document.querySelector("input[name='security_question']")
+        const question = dom.window.document.querySelector(
+          "input[name='security_question']"
+        );
         question.nodeName.should.equal('INPUT');
-        let answer = dom.window.document.querySelector("input[name='security_answer']")
+        const answer = dom.window.document.querySelector(
+          "input[name='security_answer']"
+        );
         answer.nodeName.should.equal('INPUT');
-        
+
         done();
       });
     });
@@ -366,14 +365,14 @@ describe('WEB - 0 - 2 factor authentication: ', function() {
         method: 'POST',
         json: {
           _csrf: csrf_token,
-          user_id: user_id,
+          user_id,
           login_security_question: true,
           security_question: 'aaaa',
           security_answer: 'aaaa',
         },
         headers: {
           'Content-Type': 'application/json',
-          cookie: csrf_headers
+          cookie: csrf_headers,
         },
       };
 

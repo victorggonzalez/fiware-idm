@@ -27,11 +27,10 @@ const authenticate = utils.readExampleFile(
 const admin_login = authenticate.good_admin_login;
 
 let valid_token;
-let users_ids = [];
+const users_ids = [];
 
 describe('WEB - 2 - Hidden attributes: ', function() {
-
-	// CREATE A VALID ADMIN TOKEN
+  // CREATE A VALID ADMIN TOKEN
   // eslint-disable-next-line no-undef
   before(function(done) {
     const good_admin_login = {
@@ -51,30 +50,29 @@ describe('WEB - 2 - Hidden attributes: ', function() {
   // CREATE A USERS WITH DESCRIPTION VISIBLE AND HIDDEN
   // eslint-disable-next-line no-undef
   before(function(done) {
-
     users_attributes = [
       {
         user: {
-            username: "uservisible",
-            email: "uservisible@test.com",
-            password: "uservisible",
-            description: "This should be seen",
-            extra: {
-              visible_attributes: ['username', 'description']
-            }
+          username: 'uservisible',
+          email: 'uservisible@test.com',
+          password: 'uservisible',
+          description: 'This should be seen',
+          extra: {
+            visible_attributes: ['username', 'description'],
+          },
         },
       },
       {
         user: {
-            username: "userhidden",
-            email: "userhidden@test.com",
-            password: "userhidden",
-            description: "This should not be seen",
-            extra: {
-              visible_attributes: ['username']
-            }
-        }
-      }
+          username: 'userhidden',
+          email: 'userhidden@test.com',
+          password: 'userhidden',
+          description: 'This should not be seen',
+          extra: {
+            visible_attributes: ['username'],
+          },
+        },
+      },
     ];
 
     for (let i = 0; i < users_attributes.length; i++) {
@@ -89,18 +87,16 @@ describe('WEB - 2 - Hidden attributes: ', function() {
       };
 
       request(create_user, function(error, response, body) {
-        let user_body = JSON.parse(body);
-        users_ids.push(user_body.user.id)
-        if (i === (users_attributes.length -1)) {
+        const user_body = JSON.parse(body);
+        users_ids.push(user_body.user.id);
+        if (i === users_attributes.length - 1) {
           done();
         }
       });
     }
   });
 
-
   describe('1) When request to /idm/users/<user_id> with a user with description attribute visible', function() {
-
     let csrf_token;
     let csrf_headers;
     let session_headers;
@@ -148,42 +144,43 @@ describe('WEB - 2 - Hidden attributes: ', function() {
     });
 
     it('should return a 200 Ok', function(done) {
-        const third_party = {
-          url: config.host + '/idm/users/'+ users_ids[0],
-          method: 'GET',
-          headers: {
-            cookie: session_headers,
-          },
-        };
+      const third_party = {
+        url: config.host + '/idm/users/' + users_ids[0],
+        method: 'GET',
+        headers: {
+          cookie: session_headers,
+        },
+      };
 
-        request(third_party, function(error, response) {
-          should.not.exist(error);
-          response.statusCode.should.equal(200);
-          done();
-        });
+      request(third_party, function(error, response) {
+        should.not.exist(error);
+        response.statusCode.should.equal(200);
+        done();
+      });
     });
 
     it('should show description', function(done) {
-        const third_party = {
-          url: config.host + '/idm/users/'+ users_ids[0],
-          method: 'GET',
-          headers: {
-            cookie: session_headers,
-          },
-        };
+      const third_party = {
+        url: config.host + '/idm/users/' + users_ids[0],
+        method: 'GET',
+        headers: {
+          cookie: session_headers,
+        },
+      };
 
-        request(third_party, function(error, response) {
-          should.not.exist(error);
-          const dom = new JSDOM(response.body);
-          let description = dom.window.document.querySelector("div[class='description']");
-          should.exist(description);
-          done();
-        });
+      request(third_party, function(error, response) {
+        should.not.exist(error);
+        const dom = new JSDOM(response.body);
+        const description = dom.window.document.querySelector(
+          "div[class='description']"
+        );
+        should.exist(description);
+        done();
+      });
     });
   });
 
   describe('2) When request to /idm/users/<user_id> with a user with description attribute hidden', function() {
-
     let csrf_token;
     let csrf_headers;
     let session_headers;
@@ -231,38 +228,39 @@ describe('WEB - 2 - Hidden attributes: ', function() {
     });
 
     it('should return a 200 Ok', function(done) {
-        const third_party = {
-          url: config.host + '/idm/users/'+ users_ids[1],
-          method: 'GET',
-          headers: {
-            cookie: session_headers,
-          },
-        };
+      const third_party = {
+        url: config.host + '/idm/users/' + users_ids[1],
+        method: 'GET',
+        headers: {
+          cookie: session_headers,
+        },
+      };
 
-        request(third_party, function(error, response) {
-          should.not.exist(error);
-          response.statusCode.should.equal(200);
-          done();
-        });
+      request(third_party, function(error, response) {
+        should.not.exist(error);
+        response.statusCode.should.equal(200);
+        done();
+      });
     });
 
     it('should show description', function(done) {
-        const third_party = {
-          url: config.host + '/idm/users/'+ users_ids[1],
-          method: 'GET',
-          headers: {
-            cookie: session_headers,
-          },
-        };
+      const third_party = {
+        url: config.host + '/idm/users/' + users_ids[1],
+        method: 'GET',
+        headers: {
+          cookie: session_headers,
+        },
+      };
 
-        request(third_party, function(error, response) {
-          should.not.exist(error);
-          const dom = new JSDOM(response.body);
-          let description = dom.window.document.querySelector("div[class='description']");
-          should.not.exist(description);
-          done();
-        });
+      request(third_party, function(error, response) {
+        should.not.exist(error);
+        const dom = new JSDOM(response.body);
+        const description = dom.window.document.querySelector(
+          "div[class='description']"
+        );
+        should.not.exist(description);
+        done();
+      });
     });
   });
-
 });

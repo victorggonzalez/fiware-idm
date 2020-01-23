@@ -606,7 +606,8 @@ function create_oauth_response(
       })
       .then(function(third_party_application) {
         if (third_party_application) {
-          user_info.shared_attributes = third_party_application.shared_attributes;
+          user_info.shared_attributes =
+            third_party_application.shared_attributes;
           if (user_info.shared_attributes.includes('username')) {
             user_info.username = identity.username;
           }
